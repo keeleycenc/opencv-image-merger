@@ -4,7 +4,7 @@
 
 ## 系统环境
 
-确保你的系统已安装Python
+确保你的系统已安装[Python](https://www.python.org/)并添加环境变量
 
 ## 项目依赖
 
@@ -42,16 +42,28 @@ pyinstaller --onefile scr/main.py
 - 在当前目录中创建一个文件夹用于生成合成照片的存放地，文件夹名为“combined_image”
 - 双击运行exe
   
-## 更新列表
+## 更新日志
 
-### 2023-12-28  
+<details>
+    <summary>2023-12-29 [1.1.0]</summary>
 
-1.新增函数 **get_image_paths**  
+1.新增函数 `select_image_paths_gui`  
 
-- 功能：获取指定文件夹下的图像文件路径，支持多种图像格式。如果该文件夹中的图像数量超过 *max_images* 指定的数量，它将只返回最前面的 *max_images* 张图像的路径。 ??
+- 使用图形界面选择图像文件
 
-2.新增函数 **save_image**
+2.新增 `config.json` 配置文件
+
+</details>
+
+<details>
+    <summary>2023-12-28 [1.0.0]</summary>
+
+1.新增函数 `get_image_paths`  
+
+- 功能：获取指定文件夹下的图像文件路径，支持多种图像格式。如果该文件夹中的图像数量超过 *max_images* 指定的数量，它将只返回最前面的 *max_images* 张图像的路径。
+
+2.新增函数 `save_image`  
 
 - 功能：保存图像到指定文件夹，文件名以当前时间命名。
-
   
+</details>

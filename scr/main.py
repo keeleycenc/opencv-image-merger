@@ -24,12 +24,12 @@ Dependencies:
 import cv2
 import numpy as np
 from image_merging import merge_images_overlap
-from image_processing import get_image_paths, remove_backgrounds, save_image
+from image_processing import select_image_paths_gui, remove_backgrounds, save_image
 
 def main():
     # 图片路径列表
     folder_path = 'images'  # 文件夹路径
-    image_paths = get_image_paths(folder_path)
+    image_paths = select_image_paths_gui(folder_path)
 
     # 设置颜色范围（黑到白）
     lower_bound_color = np.array([0, 0, 0])
@@ -44,7 +44,9 @@ def main():
 
     # 显示合并后的图片
     cv2.imshow('Merged Image', merged_image)
+    # 等待按键
     cv2.waitKey(0)
+    # 关闭所有OpenCV窗口
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@
 
 Author: keeleycenc
 Created on: 2023-12-27
-Last Modified: 2023-12-28
+Last Modified: 2023-12-29
 
 Description:
     该模块提供了处理图像的功能，包括背景删除、调整大小和颜色转换。
@@ -19,18 +19,21 @@ Dependencies:
 import cv2
 import os
 from datetime import datetime
+import tkinter as tk
+from tkinter import filedialog
+from config import CONFIG
 
-def get_image_paths(folder_path, max_images=5):
+def get_image_paths(folder_path):
     """
-    获取指定文件夹下的图像文件路径，支持多种图像格式，最多返回 max_images 数量的图像路径。
+    获取指定文件夹下的图像文件路径。支持多种图像格式，最多返回配置文件中设置的最大图像数量。
 
     Args:
         folder_path (str): 图像文件夹的路径。
-        max_images (int): 最大获取的图像数量。
 
     Returns:
         list: 包含图像路径的列表。
     """
+    MAX_IMAGES = CONFIG.get('MAX_IMAGES',5)
     # 支持的图像文件扩展名
     supported_extensions = ['.jpg', '.jpeg', '.png', '.bmp', '.gif']
 
@@ -40,10 +43,39 @@ def get_image_paths(folder_path, max_images=5):
     # 筛选出图像文件
     image_files = [file for file in all_files if os.path.splitext(file)[1].lower() in supported_extensions]
 
-    # 获取前 max_images 张图像的路径
-    image_paths = [os.path.join(folder_path, file) for file in image_files[:max_images]]
+    # 获取前 MAX_IMAGES 张图像的路径
+    image_paths = [os.path.join(folder_path, file) for file in image_files[:MAX_IMAGES]]
 
     return image_paths
+
+
+def select_image_paths_gui(folder_path):
+    """
+    使用图形界面选择图像文件。最多返回配置文件中设置的最大图像数量。
+
+    Args:
+        folder_path (str): 图像文件夹的默认路径。
+
+    Returns:
+        list: 包含用户选择的图像路径列表。
+    """
+    MAX_IMAGES = CONFIG.get('MAX_IMAGES',5)
+    root = tk.Tk()
+    root.withdraw()  # 不显示主窗口
+
+    # 让用户选择图像文件
+    file_paths = filedialog.askopenfilenames(
+        initialdir=folder_path, 
+        title="请选择图像文件",
+        filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],
+        multiple=True
+    )
+
+      # 如果用户没有选择任何文件，则默认 get_image_paths
+    if not file_paths:
+        return get_image_paths(folder_path)
+
+    return list(file_paths)[:MAX_IMAGES]
 
 
 def save_image(image, folder_path):
