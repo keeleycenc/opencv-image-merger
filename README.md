@@ -89,5 +89,5 @@ pyinstaller --onefile scr/main.py
   
 </details>
 
-[1]: img\20231230_192923.jpg
-[2]: img\20231230_192936.jpg
+[1]: img/20231230_192923.jpg
+[2]: img/20231230_192936.jpg
