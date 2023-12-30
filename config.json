@@ -1,3 +1,16 @@
 {
-    "MAX_IMAGES": 5 
+    "MAX_IMAGES": 4,
+    "IMAGES": "images",
+    "COMBINED_IMAGE": "combined_image",
+    "MERGE_METHOD": "weighted",
+    "LOWER_BOUND_COLOR": [
+        0,
+        0,
+        0
+    ],
+    "UPPER_BOUND_COLOR": [
+        255,
+        75,
+        255
+    ]
 }

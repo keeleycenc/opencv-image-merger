@@ -37,5 +37,6 @@ combined_image/*
 !combined_image/.gitkeep
 
 images/*
-!images/.gitkeep
+!images/multicolor1.jpg
+!images/multicolor2.jpg
 

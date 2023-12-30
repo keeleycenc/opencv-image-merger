@@ -45,6 +45,27 @@ pyinstaller --onefile scr/main.py
 ## 更新日志
 
 <details>
+    <summary>2023-12-30 [1.2.0]</summary>
+
+1.新增opencv图形界面UI，详见 `HighGUI.py`文件
+
+2.新增 `cv2.bitwise_not` 来反转掩码，保留非指定颜色的部分
+
+*反转前*
+
+![反转前][1]
+
+*反转后*
+
+![反转后][2]
+
+3.新增图片合并方法
+
+4.其它优化
+
+</details>
+
+<details>
     <summary>2023-12-29 [1.1.0]</summary>
 
 1.新增函数 `select_image_paths_gui`  
@@ -67,3 +88,6 @@ pyinstaller --onefile scr/main.py
 - 功能：保存图像到指定文件夹，文件名以当前时间命名。
   
 </details>
+
+[1]: img\20231230_192923.jpg
+[2]: img\20231230_192936.jpg

@@ -6,7 +6,7 @@
 
 Author: keeleycenc
 Created on: 2023-12-27
-Last Modified: 2023-12-29
+Last Modified: 2023-12-30
 
 Description:
     该模块提供了处理图像的功能，包括背景删除、调整大小和颜色转换。
@@ -17,85 +17,7 @@ Dependencies:
 """
 
 import cv2
-import os
-from datetime import datetime
-import tkinter as tk
-from tkinter import filedialog
-from config import CONFIG
 
-def get_image_paths(folder_path):
-    """
-    获取指定文件夹下的图像文件路径。支持多种图像格式，最多返回配置文件中设置的最大图像数量。
-
-    Args:
-        folder_path (str): 图像文件夹的路径。
-
-    Returns:
-        list: 包含图像路径的列表。
-    """
-    MAX_IMAGES = CONFIG.get('MAX_IMAGES',5)
-    # 支持的图像文件扩展名
-    supported_extensions = ['.jpg', '.jpeg', '.png', '.bmp', '.gif']
-
-    # 获取文件夹中所有文件
-    all_files = os.listdir(folder_path)
-
-    # 筛选出图像文件
-    image_files = [file for file in all_files if os.path.splitext(file)[1].lower() in supported_extensions]
-
-    # 获取前 MAX_IMAGES 张图像的路径
-    image_paths = [os.path.join(folder_path, file) for file in image_files[:MAX_IMAGES]]
-
-    return image_paths
-
-
-def select_image_paths_gui(folder_path):
-    """
-    使用图形界面选择图像文件。最多返回配置文件中设置的最大图像数量。
-
-    Args:
-        folder_path (str): 图像文件夹的默认路径。
-
-    Returns:
-        list: 包含用户选择的图像路径列表。
-    """
-    MAX_IMAGES = CONFIG.get('MAX_IMAGES',5)
-    root = tk.Tk()
-    root.withdraw()  # 不显示主窗口
-
-    # 让用户选择图像文件
-    file_paths = filedialog.askopenfilenames(
-        initialdir=folder_path, 
-        title="请选择图像文件",
-        filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],
-        multiple=True
-    )
-
-      # 如果用户没有选择任何文件，则默认 get_image_paths
-    if not file_paths:
-        return get_image_paths(folder_path)
-
-    return list(file_paths)[:MAX_IMAGES]
-
-
-def save_image(image, folder_path):
-    """
-    保存图像到指定文件夹，文件名以当前时间命名。
-
-    Args:
-        image (numpy.ndarray): 要保存的图像。
-        folder_path (str): 图像要保存的文件夹路径。
-    
-    Returns:
-        str: 保存的文件路径。
-    """
-    # 获取当前时间作为文件名，格式为 'YYYYMMDD_HHMMSS.jpg'
-    current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-    file_path = f"{folder_path}/{current_time}.jpg"
-
-    # 保存图像
-    cv2.imwrite(file_path, image)
-    return file_path
 
 def remove_background(image_path, lower_bound_color, upper_bound_color):
     """
@@ -115,8 +37,10 @@ def remove_background(image_path, lower_bound_color, upper_bound_color):
     hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     # 创建一个掩码，仅保留指定颜色范围内的区域
     mask = cv2.inRange(hsv_img, lower_bound_color, upper_bound_color)
+    # 反转掩码，以便保留非指定颜色的部分
+    mask_inv = cv2.bitwise_not(mask)
     # 应用掩码，只保留颜色在指定范围内的部分
-    res = cv2.bitwise_and(image, image, mask=mask)
+    res = cv2.bitwise_and(image, image, mask=mask_inv)
     return res
 
 
@@ -138,7 +62,6 @@ def remove_backgrounds(image_paths, lower_bound_color, upper_bound_color):
         fg = remove_background(path, lower_bound_color, upper_bound_color)
         foregrounds.append(fg)
     return foregrounds
-
 
 
 def resize_image_to_same_size(images):
