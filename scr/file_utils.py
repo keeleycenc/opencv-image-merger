@@ -22,6 +22,10 @@ import tkinter as tk
 from datetime import datetime
 from tkinter import filedialog
 from config import CONFIG
+from rich.console import Console
+
+# 创建一个 Console 实例用于打印
+console = Console()
 
 
 def get_image_paths(folder_path):
@@ -51,6 +55,7 @@ def get_image_paths(folder_path):
         # 获取前 MAX_IMAGES 张图像的路径
         image_paths = [os.path.join(folder_path, file) for file in image_files[:MAX_IMAGES]]
 
+        console.print("[bold]Selected File Paths:[/bold]", image_files, )
         return image_paths
 
     except FileNotFoundError:
@@ -91,6 +96,7 @@ def select_image_paths_gui(folder_path):
     if not file_paths:
         return get_image_paths(folder_path)
 
+    console.print("[bold]Selected File Paths:[/bold]", file_paths)
     return list(file_paths)[:MAX_IMAGES]
 
 
@@ -111,4 +117,5 @@ def save_image(image, folder_path):
 
     # 保存图像
     cv2.imwrite(file_path, image)
+    console.print("Saved image path:", "[blue]" + file_path + "[/blue]")
     return file_path

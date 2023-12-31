@@ -19,6 +19,10 @@ Dependencies:
 import cv2
 import numpy as np
 from image_processing import resize_image_to_same_size, ensure_color_images
+from rich.console import Console
+
+# 创建一个 Console 实例用于打印
+console = Console()
 
 
 def merge_images_weighted(images):

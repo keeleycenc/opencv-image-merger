@@ -8,11 +8,15 @@
 
 ## 项目依赖
 
-本项目依赖于OpenCV和NumPy。在开始之前，请确保安装了这些库。你可以使用以下命令进行安装：
+本项目依赖于`OpenCV` | `NumPy` | `Rich`。在开始之前，请确保安装了这些库。你可以使用以下命令进行安装：  
 
 ```bash
 pip install opencv-python numpy
+
+pip install rich
 ```
+
+**注意事项:** 在windows下可能需要以管理员方式运行，有时候会权限不足无法写入文件
 
 ## 使用方法
 
@@ -45,9 +49,16 @@ pyinstaller --onefile scr/main.py
 ## 更新日志
 
 <details>
+    <summary>2023-12-31 [1.2.1]</summary>
+
+1.新增 `Rich` 库，美化终端输出
+  
+</details>
+
+<details>
     <summary>2023-12-30 [1.2.0]</summary>
 
-1.新增opencv图形界面UI，详见 `HighGUI.py`文件
+1.新增opencv图形界面UI，详见 `HighGUI.py` 文件
 
 2.新增 `cv2.bitwise_not` 来反转掩码，保留非指定颜色的部分
 

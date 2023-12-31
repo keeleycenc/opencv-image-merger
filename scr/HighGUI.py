@@ -20,6 +20,9 @@ import numpy as np
 from image_processing import remove_backgrounds
 from image_merging import merge_images_overlap
 from config import save_config_to_json, load_config_from_json
+from rich.console import Console
+
+console = Console()
 
 # 轨迹条初始化的问题，需要使用标志表示已完成才能调用on_trackbar_change函数，不然会报错
 trackbars_created = False
@@ -73,6 +76,15 @@ def adjust_colors_and_preview(image_paths):
 
     # 初始调用一次以更新显示
     on_trackbar_change(image_paths, None)
+
+    instructions = [
+        ("[bold green]'s' 键[/bold green]", "保存设置"),
+        ("[bold red]'ESC' 键[/bold red]", "退出程序"),
+    ]
+
+    console.print("[bold underline]key[/bold underline]", justify="center")
+    for key, action in instructions:
+        console.print(f"{key} : [bold]{action}[/bold]")
 
     while True:
         # 按键检测
