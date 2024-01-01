@@ -12,5 +12,9 @@
         255,
         75,
         255
-    ]
+    ],
+    "CONTOUR_SETTINGS": {
+        "COLOR": [0, 255, 0],
+        "THICKNESS": 3
+    }
 }

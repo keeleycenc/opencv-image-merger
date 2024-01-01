@@ -49,6 +49,13 @@ pyinstaller --onefile scr/main.py
 ## 更新日志
 
 <details>
+    <summary>2024-01-01 [1.2.2]</summary>
+
+1.新增函数 `timeit_decorator` 装饰器
+  
+</details>
+
+<details>
     <summary>2023-12-31 [1.2.1]</summary>
 
 1.新增 `Rich` 库，美化终端输出

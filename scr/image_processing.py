@@ -6,11 +6,10 @@
 
 Author: keeleycenc
 Created on: 2023-12-27
-Last Modified: 2023-12-30
+Last Modified: 2024-01-01
 
 Description:
-    该模块提供了处理图像的功能，包括背景删除、调整大小和颜色转换。
-    它与各种图像格式一起使用，并支持单个和批量处理图像。
+    该模块提供了OpenCV处理图像的功能
 
 Dependencies:
     - OpenCV
@@ -21,7 +20,7 @@ import cv2
 
 def remove_background(image_path, lower_bound_color, upper_bound_color):
     """
-    移除图片中特定颜色范围的背景。
+    图像阈值处理
 
     Args:
         image_path (str): 图片的路径。
@@ -44,6 +43,33 @@ def remove_background(image_path, lower_bound_color, upper_bound_color):
     return res
 
 
+def detect_contours(image):
+    """
+    图像轮廓检测
+
+    Args:
+        image (numpy.ndarray): 输入的图像。
+
+    Returns:
+        numpy.ndarray: 绘制了轮廓的图像。
+    """
+    # 将图像转换为灰度图
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # 应用二值化
+    _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+
+    # 寻找轮廓
+    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    # 在原图上绘制轮廓
+    image_with_contours = image.copy()
+    cv2.drawContours(image_with_contours, contours, -1, (0, 255, 0), 3)
+
+    return image_with_contours
+
+
+
 def remove_backgrounds(image_paths, lower_bound_color, upper_bound_color):
     """
     对多张图片应用背景移除。
@@ -58,9 +84,11 @@ def remove_backgrounds(image_paths, lower_bound_color, upper_bound_color):
     """
     foregrounds = []
     for path in image_paths:
-        # 对每张图片应用背景移除
-        fg = remove_background(path, lower_bound_color, upper_bound_color)
-        foregrounds.append(fg)
+        # 图像阈值处理
+        tp = remove_background(path, lower_bound_color, upper_bound_color)
+        # 图像轮廓检测
+        cd = detect_contours(tp)
+        foregrounds.append(cd)
     return foregrounds
 
 

@@ -30,8 +30,7 @@ from image_merging import merge_images_overlap
 from file_utils import save_image, select_image_paths_gui
 from image_processing import remove_backgrounds
 from config import CONFIG
-from HighGUI import adjust_colors_and_preview
-from rich import inspect
+from HighGUI import adjust_colors_and_preview, type_print
 from rich.console import Console
 from rich.traceback import install
 from rich.table import Table
@@ -57,8 +56,15 @@ table.add_row("4", "MERGE_METHOD", "图片合并方法weighted or simple")
 table.add_row("5", "LOWER_BOUND_COLOR", "要移除的颜色范围的下界（HSV格式）")
 table.add_row("6", "UPPER_BOUND_COLOR", "要移除的颜色范围的上界（HSV格式）")
 
-# 打印表格
-console.print(table)
+# http://patorjk.com/software/taag/
+MAS = """
+███╗   ███╗     █████╗     ███████╗
+████╗ ████║    ██╔══██╗    ██╔════╝
+██╔████╔██║    ███████║    ███████╗
+██║╚██╔╝██║    ██╔══██║    ╚════██║
+██║ ╚═╝ ██║    ██║  ██║    ███████║
+╚═╝     ╚═╝    ╚═╝  ╚═╝    ╚══════╝
+"""
 
 def print_json_file(file_path):
     """
@@ -98,6 +104,8 @@ def text_progress_bar(duration):
         for symbol in progress_list:
             print(f"\r{symbol}", end="")
             time.sleep(duration / len(progress_list) / 5)  # 控制旋转速度
+    
+    print("\n", end="")
 
 
 def display_progress(min_duration, max_duration):
@@ -124,8 +132,12 @@ def main():
     """
     主程序入口
     """
+    console.rule("[bold red]Ver1.2.1",align='center')
+    type_print(console, MAS, delay=0.01, style="red")
     # 加载动画
-    text_progress_bar(1)
+    text_progress_bar(1.88)
+    # 打印表格
+    console.print(table)
     # 读取配置文件，如果不存在，则使用默认配置
     console.print("Load configuration file...")
     config_file = 'config.json'
@@ -138,22 +150,22 @@ def main():
     
     # 获取图片文件
     console.print("Execution:[italic green] Get picture file [/italic green]")
-    display_progress(1,2) 
+    display_progress(0.1,0.5) 
     image_paths = select_image_paths_gui(folder_path)
 
     # 移除每张图片的背景
     console.print("Execution: [italic green] Remove the background of each image [/italic green]")
-    display_progress(2, 4)
+    display_progress(0.5, 1.5)
     foregrounds = remove_backgrounds(image_paths, lower_bound_color, upper_bound_color)
 
     # 合并图片
     console.print("Execution: [italic green] Picture merge [/italic green]")
-    display_progress(2, 5)
+    display_progress(0.5, 2)
     merged_image = merge_images_overlap(foregrounds, method=config)
 
     # 保存图片
     console.print("Execution: [italic green] Saving image [/italic green]")
-    display_progress(1, 2)
+    display_progress(0.1, 0.5)
     save_image(merged_image, combined_image)    
 
     # GUI
@@ -162,6 +174,7 @@ def main():
     adjust_colors_and_preview(image_paths)
 
     console.rule("[bold red]Cutting line",align='center')
+
     # 关闭OpenCV窗口
     cv2.destroyAllWindows()
 

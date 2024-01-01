@@ -17,15 +17,54 @@ Dependencies:
 
 import cv2
 import numpy as np
+import time
 from image_processing import remove_backgrounds
 from image_merging import merge_images_overlap
 from config import save_config_to_json, load_config_from_json
 from rich.console import Console
+from functools import wraps
+from rich.text import Text
 
 console = Console()
 
 # 轨迹条初始化的问题，需要使用标志表示已完成才能调用on_trackbar_change函数，不然会报错
 trackbars_created = False
+
+
+def timeit_decorator(func):
+    """
+    装饰器：测量并打印函数执行的时间。
+
+    Args:
+        func (function): 需要被监控执行时间的函数。
+
+    Returns:
+        function: 装饰器内部的包装函数。
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        # 记录函数开始执行的时间
+        start_time = time.time()
+
+        # 调用原始函数，并保留其返回值
+        result = func(*args, **kwargs)
+
+        # 记录函数执行完毕的时间
+        end_time = time.time()
+
+        # 计算执行时间
+        duration = end_time - start_time
+
+        # 使用rich库打印执行时间，格式化输出
+        console.print(Text(f"Function '{func.__name__}' took ", style="bold green"), 
+                      Text(f"{duration:.2f}", style="bold red"), 
+                      Text(" seconds to execute.", style="bold green"))
+
+        # 返回原始函数的返回值
+        return result
+
+    return wrapper
+
 
 def on_trackbar_change(image_paths, _):
     """
@@ -51,6 +90,8 @@ def on_trackbar_change(image_paths, _):
     # 显示处理后的图像
     cv2.imshow('Adjusted Merged Image', temp_merged_image)
 
+
+@timeit_decorator
 def adjust_colors_and_preview(image_paths):
     """
     创建一个窗口和轨迹条，允许用户实时调整颜色阈值，并展示处理后的图像效果。
@@ -101,4 +142,18 @@ def adjust_colors_and_preview(image_paths):
             break
 
 
+@timeit_decorator
+def type_print(console, text, delay=0.1, style="red"):
+    """
+    逐个字符打印文本，以模仿打字机效果。
+
+    Args:
+        console (Console): rich库的Console对象，用于打印文本。
+        text (str): 要打印的文本。
+        delay (float, optional): 每个字符之间的延迟时间，以秒为单位。默认为0.1秒。
+        style (str, optional): 文本样式（颜色、背景等）。默认为红色。
+    """
+    for char in text:
+        console.print(char, end="", style=style)  # 逐个打印字符，不换行，并应用样式
+        time.sleep(delay)  # 在每个字符后等待指定的延迟时间
 
