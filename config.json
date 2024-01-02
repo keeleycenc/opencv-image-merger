@@ -1,16 +1,17 @@
 {
-    "MAX_IMAGES": 4,
+    "MAX_IMAGES": 9,
     "IMAGES": "images",
     "COMBINED_IMAGE": "combined_image",
-    "MERGE_METHOD": "weighted",
+    "MERGE_METHOD": "grid",
     "LOWER_BOUND_COLOR": [
-        0,
+        255,
         0,
         0
     ],
     "UPPER_BOUND_COLOR": [
+        0,
         255,
-        75,
         255
-    ]
+    ],
+    "PLACEHOLDER": "images/missing.jpg"
 }

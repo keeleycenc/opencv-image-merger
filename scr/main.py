@@ -31,7 +31,6 @@ from file_utils import save_image, select_image_paths_gui
 from image_processing import remove_backgrounds
 from config import CONFIG
 from HighGUI import adjust_colors_and_preview
-from rich import inspect
 from rich.console import Console
 from rich.traceback import install
 from rich.table import Table
@@ -50,12 +49,13 @@ table.add_column("name", min_width=12)
 table.add_column("Description")
 
 # 向表格中添加行
-table.add_row("1", "MAX_IMAGES", "需要合并的图像数量")
+table.add_row("1", "MAX_IMAGES", "需要合并图像数量的上限")
 table.add_row("2", "IMAGES", "需要合并图像的文件路径")
-table.add_row("3", "COMBINED_IMAGE", "保存合并图像文件路径")
-table.add_row("4", "MERGE_METHOD", "图片合并方法weighted or simple")
+table.add_row("3", "COMBINED_IMAGE", "保存合并后的图像文件路径")
+table.add_row("4", "MERGE_METHOD", "图像合并方法 weighted or simple or grid")
 table.add_row("5", "LOWER_BOUND_COLOR", "要移除的颜色范围的下界（HSV格式）")
 table.add_row("6", "UPPER_BOUND_COLOR", "要移除的颜色范围的上界（HSV格式）")
+table.add_row("7", "PLACEHOLDER", "图像占位符的文件路径")
 
 # 打印表格
 console.print(table)
@@ -130,7 +130,7 @@ def main():
     console.print("Load configuration file...")
     config_file = 'config.json'
     print_json_file(config_file)
-    config = CONFIG.get('MERGE_METHOD', 'simple')
+    config = CONFIG.get('MERGE_METHOD', 'weighted')
     folder_path = CONFIG.get('IMAGES', 'images')
     combined_image = CONFIG.get('COMBINED_IMAGE', 'combined_image')
     lower_bound_color = np.array(CONFIG.get('LOWER_BOUND_COLOR', [0, 0, 0]))
@@ -138,22 +138,22 @@ def main():
     
     # 获取图片文件
     console.print("Execution:[italic green] Get picture file [/italic green]")
-    display_progress(1,2) 
+    display_progress(0.5,1) 
     image_paths = select_image_paths_gui(folder_path)
 
     # 移除每张图片的背景
     console.print("Execution: [italic green] Remove the background of each image [/italic green]")
-    display_progress(2, 4)
+    display_progress(1, 2)
     foregrounds = remove_backgrounds(image_paths, lower_bound_color, upper_bound_color)
 
     # 合并图片
     console.print("Execution: [italic green] Picture merge [/italic green]")
-    display_progress(2, 5)
+    display_progress(0.5, 1)
     merged_image = merge_images_overlap(foregrounds, method=config)
 
     # 保存图片
     console.print("Execution: [italic green] Saving image [/italic green]")
-    display_progress(1, 2)
+    display_progress(0.1, 1)
     save_image(merged_image, combined_image)    
 
     # GUI

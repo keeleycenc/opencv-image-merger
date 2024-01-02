@@ -19,8 +19,9 @@ Dependencies:
 import cv2
 import os
 import tkinter as tk
+import sys
 from datetime import datetime
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from config import CONFIG
 from rich.console import Console
 
@@ -84,20 +85,30 @@ def select_image_paths_gui(folder_path):
     root = tk.Tk()
     root.withdraw()  # 不显示主窗口
 
-    # 让用户选择图像文件
-    file_paths = filedialog.askopenfilenames(
-        initialdir=folder_path, 
-        title="请选择图像文件",
-        filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],
-        multiple=True
-    )
+    file_paths = []
+    # 选择图像文件
+    while True:
+        file_paths = filedialog.askopenfilenames(
+            initialdir=folder_path, 
+            title="请选择图像文件",
+            filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")],
+            multiple=True
+        )
 
-      # 如果用户没有选择任何文件，则默认 get_image_paths
-    if not file_paths:
-        return get_image_paths(folder_path)
+        # 如果用户没有选择任何文件
+        if not file_paths:
+            # return get_image_paths(folder_path)
+            if not messagebox.askyesno("提示", "您没有选择任何文件。是否继续选择文件？"):
+                console.print("[red]sys.exit[/red]")
+                sys.exit()  # 用户选择退出
+        # 检查选择的文件数量是否超过最大值
+        elif len(file_paths) > MAX_IMAGES:
+            messagebox.showwarning("超出数量限制", f"您选择了太多文件。最多只能选择 {MAX_IMAGES} 个文件。请重新选择。")
+        else:
+            console.print("[bold]Selected File Paths:[/bold]", file_paths)
+            return list(file_paths)[:MAX_IMAGES]
 
-    console.print("[bold]Selected File Paths:[/bold]", file_paths)
-    return list(file_paths)[:MAX_IMAGES]
+    
 
 
 def save_image(image, folder_path):

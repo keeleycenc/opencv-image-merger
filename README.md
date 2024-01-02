@@ -49,6 +49,15 @@ pyinstaller --onefile scr/main.py
 ## 更新日志
 
 <details>
+    <summary>2024-01-02 [1.2.2]</summary>
+
+1.新增函数 `select_image_paths_gui` ，图片合并方法
+
+2.其它优化
+  
+</details>
+
+<details>
     <summary>2023-12-31 [1.2.1]</summary>
 
 1.新增 `Rich` 库，美化终端输出

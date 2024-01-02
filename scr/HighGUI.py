@@ -19,7 +19,7 @@ import cv2
 import numpy as np
 from image_processing import remove_backgrounds
 from image_merging import merge_images_overlap
-from config import save_config_to_json, load_config_from_json
+from config import save_config_to_json, load_config_from_json, CONFIG
 from rich.console import Console
 
 console = Console()
@@ -39,6 +39,8 @@ def on_trackbar_change(image_paths, _):
 
     if not trackbars_created:
         return
+    
+    config = CONFIG.get('MERGE_METHOD', 'weighted')
 
     # 获取轨迹条当前位置作为颜色边界值
     lower_bound = [cv2.getTrackbarPos('LowerBound' + ch, 'Adjust Colors') for ch in ['B', 'G', 'R']]
@@ -46,7 +48,7 @@ def on_trackbar_change(image_paths, _):
 
     # 用于展示处理结果的临时变量
     temp_foregrounds = remove_backgrounds(image_paths, np.array(lower_bound), np.array(upper_bound))
-    temp_merged_image = merge_images_overlap(temp_foregrounds)
+    temp_merged_image = merge_images_overlap(temp_foregrounds, method=config)
     
     # 显示处理后的图像
     cv2.imshow('Adjusted Merged Image', temp_merged_image)
