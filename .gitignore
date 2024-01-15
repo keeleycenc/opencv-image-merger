@@ -39,4 +39,5 @@ combined_image/*
 images/*
 !images/multicolor1.jpg
 !images/multicolor2.jpg
+!images/missing.jpg
 
